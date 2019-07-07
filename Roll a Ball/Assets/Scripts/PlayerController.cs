@@ -9,15 +9,19 @@ public class PlayerController : MonoBehaviour
     public Text countText;
     public Text winText;
     public Text scoreText;
+
+    public Text lifeText;
     private Rigidbody rb;
     private int count;
     private int score;
+    private int life;
 
     void Start ()
     {
         rb = GetComponent<Rigidbody>();
         count = 0;
         score = 0;
+        life = 3;
         winText.text = "";
         scoreText.text = "";
 
@@ -37,12 +41,14 @@ public class PlayerController : MonoBehaviour
      Application.Quit();
    }
    void OnTriggerEnter(Collider other)
-    {
-        
-if (count == 11) // note that this number should be equal to the number of yellow pickups on the first playfield
 {
+        
+    if (count == 11) // note that this number should be equal to the number of yellow pickups on the first playfield
+        {
     transform.position = new Vector3(35.0f, transform.position.y,0.0f); 
-}
+        }
+
+
         if (other.gameObject.CompareTag("Pick Up")){
             other.gameObject.SetActive (false);
             count = count + 1;
@@ -54,17 +60,26 @@ if (count == 11) // note that this number should be equal to the number of yello
           other.gameObject.SetActive(false);
           count = count + 1;  
           score = score - 1; // this removes 1 from the score
+          life = life - 1; // this removes 1 from the life
           SetAllText();
-     }
-        
-    }
+     }  
+
+    if (life == 0)
+        { 
+            Destroy(this.gameObject);
+                }
+                
+}
     void SetAllText ()
     { 
+        lifeText.text = "Lives: " + life.ToString();
         scoreText.text = "Score: " + score.ToString(); 
-
         countText.text = "Count: " + count.ToString ();
         if (count >= 20){
             winText.text = "You Win!";
-        }
+            }
+             if (life == 0){
+            winText.text = "You Lose!";
+                 }
     }
 }
